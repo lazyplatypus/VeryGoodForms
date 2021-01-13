@@ -53,12 +53,12 @@ const queryDatabase = async (db) => {
   };
 
   const pushToDatabase = async (db, data, collection) => {
-    // const surveys = {
-    //   question: data.questions,
-    //   hash: data.hash,
+    // const collections = {
+    //     question: data.content,
+    //     hash: data.hash,
     // };
   
-    if (collection.content && collection.hash) {
+    if (data.content && data.hash) {
       await db.collection(collection).insertMany([data]);
       return { statusCode: 201 };
     } else {
