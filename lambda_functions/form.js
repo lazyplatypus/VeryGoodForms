@@ -42,14 +42,23 @@ const queryDatabase = async (db) => {
     return queryDatabase(db);
   };
 
-  const pushToDatabase = async (db, data) => {
-    const survey = {
-      question: data.questions,
-      hash: data.hash,
-    };
+  const pushToDatabase = async (db, data, collection) => {
+    if (collection == "surveys") {
+        const collect = {
+            content: data.questions,
+            hash: data.hash,
+          };
+    }
+    else if (collection == "responses") {
+        const collect = {
+            content: data.responses,
+            hash: data.hash,
+          };    
+        }
+
   
-    if (survey.question && survey.hash) {
-      await db.collection("survey").insertMany([data]);
+    if (collect.content && collect.hash) {
+      await db.collection(collection).insertMany([data]);
       return { statusCode: 201 };
     } else {
       return { statusCode: 422 };
@@ -67,7 +76,7 @@ const queryDatabase = async (db) => {
       case "GET":
         return queryDatabase(db);
       case "POST":
-        return pushToDatabase(db, JSON.parse(event.body));
+        return pushToDatabase(db, JSON.parse(event.body), JSON.parse(event.headers['collection']));
       default:
         return { statusCode: 400 };
     }
