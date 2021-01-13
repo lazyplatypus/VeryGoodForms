@@ -41,3 +41,34 @@ const queryDatabase = async (db) => {
     const db = await connectToDatabase(MONGODB_URI);
     return queryDatabase(db);
   };
+
+  const pushToDatabase = async (db, data) => {
+    const survey = {
+      question: data.questions,
+      hash: data.hash,
+    };
+  
+    if (survey.question && survey.hash) {
+      await db.collection("survey").insertMany([data]);
+      return { statusCode: 201 };
+    } else {
+      return { statusCode: 422 };
+    }
+  };
+  
+  module.exports.handler = async (event, context) => {
+    // otherwise the connection will never complete, since
+    // we keep the DB connection alive
+    context.callbackWaitsForEmptyEventLoop = false;
+  
+    const db = await connectToDatabase(MONGODB_URI);
+  
+    switch (event.httpMethod) {
+      case "GET":
+        return queryDatabase(db);
+      case "POST":
+        return pushToDatabase(db, JSON.parse(event.body));
+      default:
+        return { statusCode: 400 };
+    }
+  };
