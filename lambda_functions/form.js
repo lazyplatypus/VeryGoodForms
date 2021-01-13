@@ -76,7 +76,7 @@ const queryDatabase = async (db) => {
       case "GET":
         return queryDatabase(db);
       case "POST":
-        return pushToDatabase(db, JSON.parse(event.body), JSON.parse(event.header['collection']));
+        return pushToDatabase(db, JSON.parse(event.body), "surveys");
       default:
         return { statusCode: 400 };
     }
