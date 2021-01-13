@@ -43,13 +43,13 @@ const queryDatabase = async (db) => {
   };
 
   const pushToDatabase = async (db, data) => {
-    const survey = {
+    const surveys = {
       question: data.questions,
       hash: data.hash,
     };
   
-    if (survey.question && survey.hash) {
-      await db.collection("survey").insertMany([data]);
+    if (surveys.question && surveys.hash) {
+      await db.collection("surveys").insertMany([data]);
       return { statusCode: 201 };
     } else {
       return { statusCode: 422 };
