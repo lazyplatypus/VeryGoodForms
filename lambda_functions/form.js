@@ -7,16 +7,6 @@ const DB_NAME = 'formboiz';
 
 let cachedDb = null;
 
-const surveys = {
-    question: data.content,
-    hash: data.hash,
-  };
-
-const responses = {
-    response: data.content,
-    hash: data.hash,
-  };
-
 const connectToDatabase = async (uri) => {
   // we can cache the access to our database to speed things up a bit
   // (this is the only thing that is safe to cache here)
@@ -52,14 +42,14 @@ const queryDatabase = async (db) => {
     return queryDatabase(db);
   };
 
-  const pushToDatabase = async (db, data, collection) => {
-    // const collections = {
-    //     question: data.content,
-    //     hash: data.hash,
-    // };
+  const pushToDatabase = async (db, data) => {
+    const survey = {
+      question: data.questions,
+      hash: data.hash,
+    };
   
-    if (data.content && data.hash) {
-      await db.collection(collection).insertMany([data]);
+    if (survey.question && survey.hash) {
+      await db.collection("survey").insertMany([data]);
       return { statusCode: 201 };
     } else {
       return { statusCode: 422 };
@@ -77,7 +67,7 @@ const queryDatabase = async (db) => {
       case "GET":
         return queryDatabase(db);
       case "POST":
-        return pushToDatabase(db, JSON.parse(event.body), "surveys");
+        return pushToDatabase(db, JSON.parse(event.body));
       default:
         return { statusCode: 400 };
     }
