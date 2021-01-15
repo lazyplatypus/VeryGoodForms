@@ -1,9 +1,8 @@
-// ./lambda_functions/form.js
+// ./lambda_functions/pokemon.js
 
 const MongoClient = require("mongodb").MongoClient;
 
 const MONGODB_URI = process.env.MONGODB_URI;
-// Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
 let cachedDb = null;
@@ -23,25 +22,25 @@ const connectToDatabase = async (uri) => {
 };
 
 const queryDatabase = async (db) => {
-  const surveys = await db.collection("surveys").find({}).toArray();
-
-  return {
-    statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(surveys),
+    const surveys = await db.collection("surveys").find({}).toArray();
+  
+    return {
+      statusCode: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(surveys),
+    };
   };
-};
-
-module.exports.handler = async (event, context) => {
-  // otherwise the connection will never complete, since
-  // we keep the DB connection alive
-  context.callbackWaitsForEmptyEventLoop = false;
-
-  const db = await connectToDatabase(MONGODB_URI);
-  return queryDatabase(db);
-};
+  
+  module.exports.handler = async (event, context) => {
+    // otherwise the connection will never complete, since
+    // we keep the DB connection alive
+    context.callbackWaitsForEmptyEventLoop = false;
+  
+    const db = await connectToDatabase(MONGODB_URI);
+    return queryDatabase(db);
+  };
 
   const pushToDatabase = async (db, data) => {
     const surveys = {
