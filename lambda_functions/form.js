@@ -23,7 +23,7 @@ const connectToDatabase = async (uri) => {
 };
 
 const queryDatabase = async (db, hash) => {
-  const surveys = await db.collection("surveys").find({"hash": hash.hash}).toArray();
+  const surveys = await db.collection("surveys").find({hash: hash.hash}).toArray();
 
   return {
     statusCode: 200,
@@ -59,19 +59,34 @@ const pushToDatabase = async (db, data) => {
   }
 };
 
+const editDatabase = async (db, param) => {
+
+  if (param.original && param.updated) {
+    await db.collection("surveys").updateOne(
+      { hash: param.hash, questions: param.original },
+      { $set: { "questions.$" : param.updated } }
+   )
+    return { statusCode: 201 };
+  } else {
+    return { statusCode: 422 };
+  }
+};
+
 module.exports.handler = async (event, context) => {
   // otherwise the connection will never complete, since
   // we keep the DB connection alive
   context.callbackWaitsForEmptyEventLoop = false;
 
   const db = await connectToDatabase(MONGODB_URI);
-  const hash = event.queryStringParameters;
+  const param = event.queryStringParameters;
 
   switch (event.httpMethod) {
     case "GET":
-      return queryDatabase(db, hash);
+      return queryDatabase(db, param);
     case "POST":
       return pushToDatabase(db, JSON.parse(event.body));
+    case "PUT":
+      return editDatabase(db, param);
     default:
       return { statusCode: 400 };
   }
