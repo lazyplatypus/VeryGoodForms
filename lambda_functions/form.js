@@ -30,7 +30,7 @@ const queryDatabase = async (db, hash) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(surveys),
+    body: JSON.stringify(hash),
   };
 };
 
