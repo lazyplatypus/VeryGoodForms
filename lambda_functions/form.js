@@ -22,8 +22,8 @@ const connectToDatabase = async (uri) => {
   return cachedDb;
 };
 
-const queryDatabase = async (db) => {
-  const surveys = await db.collection("surveys").find({}).toArray();
+const queryDatabase = async (db, hash) => {
+  const surveys = await db.collection("surveys").find({"hash": hash}).toArray();
 
   return {
     statusCode: 200,
@@ -40,7 +40,7 @@ module.exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const db = await connectToDatabase(MONGODB_URI);
-  return queryDatabase(db);
+  return queryDatabase(db, event.headers['hash']);
 };
 
 const pushToDatabase = async (db, data) => {
