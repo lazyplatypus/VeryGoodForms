@@ -30,7 +30,7 @@ const queryDatabase = async (db, hash) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(hash),
+    body: JSON.stringify(surveys),
   };
 };
 
@@ -40,7 +40,7 @@ module.exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const db = await connectToDatabase(MONGODB_URI);
-  return queryDatabase(db, event.headers['hash']);
+  return queryDatabase(db, event.headers["hash"]);
 };
 
 const pushToDatabase = async (db, data) => {
