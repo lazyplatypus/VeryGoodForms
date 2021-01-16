@@ -1,26 +1,13 @@
 // ./lambda_functions/form.js
 
 const MongoClient = require("mongodb").MongoClient;
+const connectToDatabase = require('./helpers.js');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
 let cachedDb = null;
-
-const connectToDatabase = async (uri) => {
-  // we can cache the access to our database to speed things up a bit
-  // (this is the only thing that is safe to cache here)
-  if (cachedDb) return cachedDb;
-
-  const client = await MongoClient.connect(uri, {
-    useUnifiedTopology: true,
-  });
-
-  cachedDb = client.db(DB_NAME);
-
-  return cachedDb;
-};
 
 const queryDatabase = async (db, hash) => {
   const surveys = await db.collection("surveys").find({hash: hash.hash}).toArray();
