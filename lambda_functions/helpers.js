@@ -1,21 +1,10 @@
-const MongoClient = require("mongodb").MongoClient;
-
-const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = 'formboiz';
-
-let cachedDb = null;
-
-const surveys = {
-    question: data.questions,
-    hash: data.hash,
-  };
-
-const responses = {
-    response: data.responses,
-    hash: data.hash,
-  };
+var content;
 
 const connectToDatabase = async (uri) => {
+  let cachedDb = null;
+  const MongoClient = require("mongodb").MongoClient;
+  const DB_NAME = 'formboiz';
+
   // we can cache the access to our database to speed things up a bit
   // (this is the only thing that is safe to cache here)
   if (cachedDb) return cachedDb;
@@ -29,24 +18,39 @@ const connectToDatabase = async (uri) => {
   return cachedDb;
 };
 
-const queryDatabase = async (db) => {
-    const surveys = await db.collection("surveys").find({}).toArray();
-  
-    return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(surveys),
-    };
-  };
+const queryDatabase = async (db, hash, collection) => {
+  const output = await db.collection(collection).find({hash: hash.hash}).toArray();
 
-  const pushToQuestions = async (db, data, collection) => {
-  
-    if (surveys.question && surveys.hash) {
-      await db.collection(collection).insertMany([data]);
-      return { statusCode: 201 };
-    } else {
-      return { statusCode: 422 };
-    }
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(output),
   };
+};
+
+const pushToDatabase = async (db, data, collection) => {
+  if (collection == "surveys") {
+    var content = {
+      content: data.questions,
+      hash: data.hash,
+    };
+  } else if (collection == "responses") {
+    var content = {
+      content: data.responses,
+      hash: data.hash,
+    };
+  }
+
+  if (content.content && content.hash) {
+    await db.collection(collection).insertMany([data]);
+    return { statusCode: 201 };
+  } else {
+    return { statusCode: 422 };
+  }
+};
+
+exports.connectToDatabase = connectToDatabase;
+exports.queryDatabase = queryDatabase;
+exports.pushToDatabase = pushToDatabase;
