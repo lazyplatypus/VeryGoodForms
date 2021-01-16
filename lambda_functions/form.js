@@ -18,20 +18,6 @@ module.exports.handler = async (event, context) => {
   return functions.queryDatabase(db, hash, "surveys");
 };
 
-const pushToDatabase = async (db, data) => {
-  const surveys = {
-    question: data.questions,
-    hash: data.hash,
-  };
-
-  if (surveys.question && surveys.hash) {
-    await db.collection("surveys").insertMany([data]);
-    return { statusCode: 201 };
-  } else {
-    return { statusCode: 422 };
-  }
-};
-
 const editDatabase = async (db, param) => {
 
   if (param.original && param.updated) {
@@ -57,7 +43,7 @@ module.exports.handler = async (event, context) => {
     case "GET":
       return functions.queryDatabase(db, param, "surveys");
     case "POST":
-      return pushToDatabase(db, JSON.parse(event.body));
+      return functions.pushToDatabase(db, JSON.parse(event.body), "surveys");
     case "PUT":
       return editDatabase(db, param);
     default:

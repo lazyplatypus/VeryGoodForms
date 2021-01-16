@@ -28,5 +28,27 @@ const queryDatabase = async (db, hash, collection) => {
   };
 };
 
+const pushToDatabase = async (db, data, collection) => {
+  if (collection == "surveys") {
+    const output = {
+      content: data.questions,
+      hash: data.hash,
+    };
+  } else if (collection == "responses") {
+    const output = {
+      content: data.responses,
+      hash: data.hash,
+    };
+  }
+
+  if (output.content && output.hash) {
+    await db.collection(collection).insertMany([data]);
+    return { statusCode: 201 };
+  } else {
+    return { statusCode: 422 };
+  }
+};
+
 exports.connectToDatabase = connectToDatabase;
 exports.queryDatabase = queryDatabase;
+exports.pushToDatabase = pushToDatabase;

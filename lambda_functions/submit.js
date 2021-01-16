@@ -18,20 +18,6 @@ module.exports.handler = async (event, context) => {
   return functions.queryDatabase(db, hash, "responses");
 };
 
-const pushToDatabase = async (db, data) => {
-  const responses = {
-    response: data.responses,
-    hash: data.hash,
-  };
-
-  if (responses.response && responses.hash) {
-    await db.collection("responses").insertMany([data]);
-    return { statusCode: 201 };
-  } else {
-    return { statusCode: 422 };
-  }
-};
-
 module.exports.handler = async (event, context) => {
   // otherwise the connection will never complete, since
   // we keep the DB connection alive
