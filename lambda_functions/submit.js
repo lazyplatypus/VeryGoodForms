@@ -2,7 +2,7 @@
 
 const MongoClient = require("mongodb").MongoClient;
 
-const MONGODB_URI = "mongodb+srv://m001-student:m001-mongodb-basics@productrectest.ov7hn.mongodb.net/test?";
+const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
