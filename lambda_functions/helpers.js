@@ -1,3 +1,5 @@
+const output;
+
 const connectToDatabase = async (uri) => {
   let cachedDb = null;
   const MongoClient = require("mongodb").MongoClient;
@@ -30,10 +32,7 @@ const queryDatabase = async (db, hash, collection) => {
 
 const pushToDatabase = async (db, data, collection) => {
   if (collection == "surveys") {
-    const output = {
-      content: data.questions,
-      hash: data.hash,
-    };
+
   } else if (collection == "responses") {
     const output = {
       content: data.responses,
