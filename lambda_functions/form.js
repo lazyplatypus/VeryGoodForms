@@ -7,8 +7,6 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
-let cachedDb = null;
-
 const queryDatabase = async (db, hash) => {
   const surveys = await db.collection("surveys").find({hash: hash.hash}).toArray();
 
