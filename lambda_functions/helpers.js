@@ -16,4 +16,17 @@ const connectToDatabase = async (uri) => {
   return cachedDb;
 };
 
+const queryDatabase = async (db, hash, collection) => {
+  const output = await db.collection(collection).find({hash: hash.hash}).toArray();
+
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(output),
+  };
+};
+
 exports.connectToDatabase = connectToDatabase;
+exports.queryDatabase = queryDatabase;

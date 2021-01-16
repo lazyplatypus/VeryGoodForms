@@ -7,18 +7,6 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
-const queryDatabase = async (db, hash) => {
-  const surveys = await db.collection("surveys").find({hash: hash.hash}).toArray();
-
-  return {
-    statusCode: 200,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(surveys),
-  };
-};
-
 module.exports.handler = async (event, context) => {
   // otherwise the connection will never complete, since
   // we keep the DB connection alive
@@ -27,7 +15,7 @@ module.exports.handler = async (event, context) => {
   const db = await functions.connectToDatabase(MONGODB_URI);
   const hash = event.queryStringParameters;
   // console.log(hash);
-  return queryDatabase(db, hash);
+  return functions.queryDatabase(db, hash, "surveys");
 };
 
 const pushToDatabase = async (db, data) => {
@@ -67,7 +55,7 @@ module.exports.handler = async (event, context) => {
 
   switch (event.httpMethod) {
     case "GET":
-      return queryDatabase(db, param);
+      return functions.queryDatabase(db, param, "surveys");
     case "POST":
       return pushToDatabase(db, JSON.parse(event.body));
     case "PUT":
