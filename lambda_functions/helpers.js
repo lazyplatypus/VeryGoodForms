@@ -1,4 +1,4 @@
-var output;
+var content;
 
 const connectToDatabase = async (uri) => {
   let cachedDb = null;
@@ -32,18 +32,18 @@ const queryDatabase = async (db, hash, collection) => {
 
 const pushToDatabase = async (db, data, collection) => {
   if (collection == "surveys") {
-    var output = {
+    var content = {
       content: data.questions,
       hash: data.hash,
     };
   } else if (collection == "responses") {
-    var output = {
+    var content = {
       content: data.responses,
       hash: data.hash,
     };
   }
 
-  if (output.content && output.hash) {
+  if (content.content && content.hash) {
     await db.collection(collection).insertMany([data]);
     return { statusCode: 201 };
   } else {
