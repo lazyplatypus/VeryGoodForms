@@ -2,7 +2,6 @@
 
 const MongoClient = require("mongodb").MongoClient;
 const functions = require('./helpers');
-let { connectToDatabase } = functions;
 
 const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
@@ -27,7 +26,7 @@ module.exports.handler = async (event, context) => {
   // we keep the DB connection alive
   context.callbackWaitsForEmptyEventLoop = false;
 
-  const db = await connectToDatabase(MONGODB_URI);
+  const db = await functions.connectToDatabase(MONGODB_URI);
   const hash = event.queryStringParameters;
   // console.log(hash);
   return queryDatabase(db, hash);
@@ -65,7 +64,7 @@ module.exports.handler = async (event, context) => {
   // we keep the DB connection alive
   context.callbackWaitsForEmptyEventLoop = false;
 
-  const db = await connectToDatabase(MONGODB_URI);
+  const db = await functions.connectToDatabase(MONGODB_URI);
   const param = event.queryStringParameters;
 
   switch (event.httpMethod) {

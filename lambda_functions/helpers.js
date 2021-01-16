@@ -1,4 +1,4 @@
-module.exports = async function connectToDatabase(uri) {
+const connectToDatabase = async (uri) => {
   // we can cache the access to our database to speed things up a bit
   // (this is the only thing that is safe to cache here)
   if (cachedDb) return cachedDb;
@@ -11,3 +11,5 @@ module.exports = async function connectToDatabase(uri) {
 
   return cachedDb;
 };
+
+exports.connectToDatabase = connectToDatabase;
