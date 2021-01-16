@@ -1,7 +1,8 @@
 // ./lambda_functions/form.js
 
 const MongoClient = require("mongodb").MongoClient;
-const connectToDatabase = require('./helpers.js');
+const functions = require('./helpers.js');
+let { connectToDatabase } = functions;
 
 const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
