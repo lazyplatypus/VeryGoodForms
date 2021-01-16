@@ -1,6 +1,5 @@
 // ./lambda_functions/form.js
 
-const MongoClient = require("mongodb").MongoClient;
 const functions = require('./helpers');
 
 const MONGODB_URI = process.env.MONGODB_URI;
