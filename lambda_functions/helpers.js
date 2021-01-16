@@ -1,6 +1,7 @@
 const connectToDatabase = async (uri) => {
   let cachedDb = null;
   const MongoClient = require("mongodb").MongoClient;
+  const DB_NAME = 'formboiz';
 
   // we can cache the access to our database to speed things up a bit
   // (this is the only thing that is safe to cache here)
