@@ -7,6 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Place this environment variable in Netlify
 const DB_NAME = 'formboiz';
 
+
 module.exports.handler = async (event, context) => {
   // otherwise the connection will never complete, since
   // we keep the DB connection alive
