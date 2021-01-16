@@ -40,8 +40,11 @@ module.exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   const db = await connectToDatabase(MONGODB_URI);
-  const hash = event.queryStringParameters;
-  // console.log(hash);
+  
+  // if hash
+  const hash = event.headers['hash'] ? event.headers.hash : '';
+  
+    // console.log(hash);
   return queryDatabase(db, hash);
 };
 
